@@ -27,6 +27,7 @@ const HomePage = () => {
 
     // Filter and Sort
     const filteredProducts = useMemo(() => {
+        if (!products || products.length === 0) return [];
         let result = [...products];
 
         if (selectedCategory) {
