@@ -1,13 +1,37 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearCart } from './cartSlice';
+import { clearCart, removeFromCart } from './cartSlice';
 import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
-import { ShoppingBag, ArrowRight, Trash2, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, X, AlertTriangle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 import './CartPage.css';
 
 const CartPage = () => {
     const { cartItems, totalPrice, totalQuantity } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
+    const { addToast } = useToast();
+
+    const [itemToDelete, setItemToDelete] = useState(null);
+
+    const handleRemoveRequest = (item) => {
+        setItemToDelete(item);
+    };
+
+    const confirmRemove = () => {
+        if (itemToDelete) {
+            dispatch(removeFromCart(itemToDelete.id));
+            addToast(`${itemToDelete.title} removed from bag`, 'info');
+            setItemToDelete(null);
+        }
+    };
+
+    const handleClearCart = () => {
+        if (window.confirm('Are you sure you want to clear your entire bag?')) {
+            dispatch(clearCart());
+            addToast('Shopping bag cleared', 'info');
+        }
+    };
 
     if (cartItems.length === 0) {
         return (
@@ -34,7 +58,7 @@ const CartPage = () => {
                     <h1>Shopping Bag</h1>
                     <p className="cart-subtitle">Review your selected creations ({totalQuantity} items)</p>
                 </div>
-                <button onClick={() => dispatch(clearCart())} className="clear-cart-btn">
+                <button onClick={handleClearCart} className="clear-cart-btn">
                     <Trash2 size={16} /> Clear All
                 </button>
             </div>
@@ -42,8 +66,14 @@ const CartPage = () => {
             <div className="cart-grid">
                 <div className="cart-items-list">
                     {cartItems.map((item) => (
-                        <CartItem key={item.id} item={item} />
+                        <CartItem key={item.id} item={item} onRemove={handleRemoveRequest} />
                     ))}
+
+                    <div className="continue-shopping-row">
+                        <Link to="/" className="text-link">
+                            <ArrowLeft size={16} /> Continue Shopping
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="cart-summary-panel">
@@ -79,6 +109,23 @@ const CartPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            {itemToDelete && (
+                <div className="modal-overlay animate-fade-in">
+                    <div className="modal-content glass">
+                        <div className="modal-header">
+                            <AlertTriangle size={24} className="warning-icon" />
+                            <h3>Remove Item?</h3>
+                        </div>
+                        <p>Are you sure you want to remove <strong>{itemToDelete.title}</strong> from your shopping bag?</p>
+                        <div className="modal-actions">
+                            <button className="premium-btn outline small" onClick={() => setItemToDelete(null)}>Cancel</button>
+                            <button className="premium-btn danger small" onClick={confirmRemove}>Remove</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

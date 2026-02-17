@@ -1,18 +1,9 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from './productsSlice';
 import ProductCard from '../../components/ProductCard';
 import './ProductsList.css';
 
-const ProductsList = () => {
-    const dispatch = useDispatch();
-    const { products, loading, error } = useSelector((state) => state.products);
+const ProductsList = ({ products, loading, error }) => {
 
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
-
-    if (loading && products.length === 0) {
+    if (loading && (!products || products.length === 0)) {
         return (
             <div className="products-grid">
                 {[...Array(8)].map((_, i) => (
@@ -30,6 +21,14 @@ const ProductsList = () => {
 
     if (error) {
         return <div className="error-message">Error: {error}</div>;
+    }
+
+    if (!products || products.length === 0) {
+        return (
+            <div className="empty-state">
+                <p>No products found matching your criteria.</p>
+            </div>
+        );
     }
 
     return (

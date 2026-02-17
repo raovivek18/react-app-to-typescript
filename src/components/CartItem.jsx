@@ -4,10 +4,10 @@ import { increaseQuantity, decreaseQuantity, removeFromCart } from '../features/
 import { Trash2, Plus, Minus } from 'lucide-react';
 import './CartItem.css';
 
-const CartItem = React.memo(({ item }) => {
+const CartItem = React.memo(({ item, onRemove }) => {
     const dispatch = useDispatch();
 
-    const imageUrl = item.images[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
+    const imageUrl = item.images?.[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
 
     return (
         <div className="cart-item glass animate-fade-in">
@@ -32,6 +32,7 @@ const CartItem = React.memo(({ item }) => {
                         onClick={() => dispatch(decreaseQuantity(item.id))}
                         className="qty-action"
                         disabled={item.quantity <= 1}
+                        aria-label="Decrease quantity"
                     >
                         <Minus size={14} />
                     </button>
@@ -39,15 +40,17 @@ const CartItem = React.memo(({ item }) => {
                     <button
                         onClick={() => dispatch(increaseQuantity(item.id))}
                         className="qty-action"
+                        aria-label="Increase quantity"
                     >
                         <Plus size={14} />
                     </button>
                 </div>
 
                 <button
-                    onClick={() => dispatch(removeFromCart(item.id))}
+                    onClick={() => onRemove(item)}
                     className="item-remove-btn"
                     title="Remove from bag"
+                    aria-label="Remove item"
                 >
                     <Trash2 size={18} />
                 </button>

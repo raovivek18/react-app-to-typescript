@@ -1,21 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProductById, clearSelectedProduct } from './productsSlice';
+import { fetchProductById, fetchProducts, clearSelectedProduct } from './productsSlice';
 import { addToCart } from '../cart/cartSlice';
-import { ShoppingCart, ArrowLeft, ShieldCheck, Truck, RefreshCw, Star } from 'lucide-react';
+import { ShoppingCart, Check, ShieldCheck, Truck, RefreshCw, Star, ChevronRight } from 'lucide-react';
+import ProductCard from '../../components/ProductCard';
+import { useToast } from '../../context/ToastContext';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
-    const { selectedProduct, loading, error } = useSelector((state) => state.products);
+    const { addToast } = useToast();
+    const { selectedProduct, products, loading, error } = useSelector((state) => state.products);
     const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         dispatch(fetchProductById(id));
+        if (products.length === 0) {
+            dispatch(fetchProducts());
+        }
         return () => dispatch(clearSelectedProduct());
     }, [dispatch, id]);
+
+    const images = selectedProduct?.images?.map(img => img.replace(/[\[\]"]/g, '')) || [];
+
+    const handleAddToCart = () => {
+        dispatch(addToCart(selectedProduct));
+        addToast(`Added ${selectedProduct.title} to your cart`, 'success');
+    };
+
+    const relatedProducts = useMemo(() => {
+        if (!selectedProduct || !products.length) return [];
+        return products
+            .filter(p => p.category?.id === selectedProduct.category?.id && p.id !== selectedProduct.id)
+            .slice(0, 4);
+    }, [selectedProduct, products]);
 
     if (loading && !selectedProduct) {
         return (
@@ -47,23 +68,27 @@ const ProductDetail = () => {
 
     if (!selectedProduct) return null;
 
-    const images = selectedProduct.images.map(img => img.replace(/[\[\]"]/g, ''));
-
     return (
         <div className="product-detail-page animate-fade-in">
             <div className="container">
-                <Link to="/" className="back-link group">
-                    <ArrowLeft size={18} /> <span>Back to Collections</span>
-                </Link>
+                {/* Breadcrumb */}
+                <nav className="breadcrumb">
+                    <Link to="/">Home</Link>
+                    <ChevronRight size={14} />
+                    <span className="category-crumb">{selectedProduct.category?.name}</span>
+                    <ChevronRight size={14} />
+                    <span className="current-crumb">{selectedProduct.title}</span>
+                </nav>
 
                 <div className="product-detail-grid">
                     <div className="product-visuals">
-                        <div className="main-image-container premium-card">
+                        <div className="main-image-container premium-card group">
                             <img
                                 src={images[activeImage]}
                                 alt={selectedProduct.title}
                                 className="main-detail-image"
                             />
+                            <div className="zoom-hint">Hover to Zoom</div>
                         </div>
                         <div className="image-navigation">
                             {images.map((img, idx) => (
@@ -96,7 +121,7 @@ const ProductDetail = () => {
                         <div className="detail-price-wrapper">
                             <span className="detail-price">${selectedProduct.price}</span>
                             <div className="inventory-status">
-                                <div className="status-dot"></div>
+                                <div className="status-dot success"></div>
                                 <span>In Stock & Ready to Ship</span>
                             </div>
                         </div>
@@ -109,7 +134,7 @@ const ProductDetail = () => {
                         <div className="action-selection">
                             <button
                                 className="premium-btn add-to-bag-btn"
-                                onClick={() => dispatch(addToCart(selectedProduct))}
+                                onClick={handleAddToCart}
                             >
                                 <ShoppingCart size={22} />
                                 Add to Shopping Bag
@@ -141,6 +166,18 @@ const ProductDetail = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Related Products */}
+                {relatedProducts.length > 0 && (
+                    <div className="related-products-section">
+                        <h3 className="section-title small">You May Also Appreciate</h3>
+                        <div className="products-grid">
+                            {relatedProducts.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

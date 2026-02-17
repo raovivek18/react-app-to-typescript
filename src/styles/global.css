@@ -142,6 +142,22 @@ h4 {
   transform: translateY(-2px) scale(1.02);
 }
 
+button:disabled,
+.premium-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  background: var(--text-muted);
+  color: #fff;
+}
+
+.premium-btn.outline:disabled {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
 /* Focus States */
 button:focus-visible,
 input:focus-visible,
