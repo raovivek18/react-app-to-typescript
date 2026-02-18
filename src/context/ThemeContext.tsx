@@ -1,11 +1,18 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
-const ThemeContext = createContext(null);
+type Theme = 'light' | 'dark';
 
-export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState(() => {
-        const saved = localStorage.getItem('theme');
-        return saved || 'light';
+interface ThemeContextType {
+    theme: Theme;
+    toggleTheme: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+    const [theme, setTheme] = useState<Theme>(() => {
+        const saved = localStorage.getItem('theme') as Theme;
+        return saved === 'light' || saved === 'dark' ? saved : 'light';
     });
 
     useEffect(() => {

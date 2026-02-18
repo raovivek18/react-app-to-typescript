@@ -1,17 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cart/cartSlice';
 import { ShoppingCart, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '../context/ToastContext';
+import { Product } from '../types';
 import './ProductCard.css';
 
-const ProductCard = React.memo(({ product, index = 0 }) => {
-    const dispatch = useDispatch();
+interface ProductCardProps {
+    product: Product;
+    index?: number;
+}
+
+const ProductCard = React.memo(({ product, index = 0 }: ProductCardProps) => {
+    const dispatch = useAppDispatch();
     const { addToast } = useToast();
 
-    const handleAddToCart = (e) => {
+    const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
         dispatch(addToCart(product));
         addToast(`${product.title} added to cart`, 'success');

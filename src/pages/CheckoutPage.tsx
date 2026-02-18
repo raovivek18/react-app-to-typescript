@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart } from '../features/cart/cartSlice';
 import { motion } from 'framer-motion';
 import { ArrowLeft, CreditCard, Lock, Loader } from 'lucide-react';
@@ -8,14 +8,27 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import '../styles/CheckoutPage.css';
 
+interface FormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    zipCode: string;
+    cardNumber: string;
+    expiryDate: string;
+    cvv: string;
+}
+
 const CheckoutPage = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { addToast } = useToast();
-    const { cartItems, totalPrice } = useSelector(state => state.cart);
+    const { cartItems, totalPrice } = useAppSelector(state => state.cart);
 
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         firstName: '',
         lastName: '',
         email: '',
@@ -28,18 +41,18 @@ const CheckoutPage = () => {
         cvv: ''
     });
 
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) {
+        if (errors[name as keyof FormData]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
 
     const validate = () => {
-        const newErrors = {};
+        const newErrors: Partial<Record<keyof FormData, string>> = {};
         if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
         if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
         if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Valid email is required';
@@ -55,7 +68,7 @@ const CheckoutPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) {
             addToast('Please fix the errors in the form', 'error');
@@ -198,7 +211,7 @@ const CheckoutPage = () => {
                                         type="text"
                                         name="cardNumber"
                                         placeholder="1234 5678 9012 3456"
-                                        maxLength="16"
+                                        maxLength={16}
                                         value={formData.cardNumber}
                                         onChange={handleChange}
                                         className={errors.cardNumber ? 'error' : ''}
@@ -214,7 +227,7 @@ const CheckoutPage = () => {
                                         type="text"
                                         name="expiryDate"
                                         placeholder="MM/YY"
-                                        maxLength="5"
+                                        maxLength={5}
                                         value={formData.expiryDate}
                                         onChange={handleChange}
                                         className={errors.expiryDate ? 'error' : ''}
@@ -229,7 +242,7 @@ const CheckoutPage = () => {
                                             type="text"
                                             name="cvv"
                                             placeholder="123"
-                                            maxLength="3"
+                                            maxLength={3}
                                             value={formData.cvv}
                                             onChange={handleChange}
                                             className={errors.cvv ? 'error' : ''}

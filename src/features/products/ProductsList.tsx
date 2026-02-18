@@ -1,7 +1,14 @@
 import ProductCard from '../../components/ProductCard';
+import { Product } from '../../types';
 import './ProductsList.css';
 
-const ProductsList = ({ products, loading, error }) => {
+interface ProductsListProps {
+    products: Product[];
+    loading: boolean;
+    error: string | null;
+}
+
+const ProductsList = ({ products, loading, error }: ProductsListProps) => {
 
     if (loading && (!products || products.length === 0)) {
         return (

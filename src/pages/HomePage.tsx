@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchProducts } from '../features/products/productsSlice';
 import Hero from '../components/Hero';
 import ProductsList from '../features/products/ProductsList';
@@ -7,11 +7,11 @@ import { ChevronDown, X, Filter, ArrowUpDown } from 'lucide-react';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
-    const dispatch = useDispatch();
-    const { products, loading, error } = useSelector((state) => state.products);
+    const dispatch = useAppDispatch();
+    const { products, loading, error } = useAppSelector((state) => state.products);
 
-    const [sortBy, setSortBy] = useState(''); // 'price-asc', 'price-desc'
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | ''>(''); // 'price-asc', 'price-desc'
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     useEffect(() => {
@@ -77,7 +77,7 @@ const HomePage = () => {
                                             >
                                                 All Categories
                                             </div>
-                                            {categories.map(cat => (
+                                            {categories.map((cat: string) => (
                                                 <div
                                                     key={cat}
                                                     className={`option ${selectedCategory === cat ? 'selected' : ''}`}

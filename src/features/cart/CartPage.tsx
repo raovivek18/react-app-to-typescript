@@ -1,21 +1,22 @@
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { clearCart, removeFromCart } from './cartSlice';
 import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
 import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, X, AlertTriangle } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CartItem as ICartItem } from '../../types';
 import './CartPage.css';
 
 const CartPage = () => {
-    const { cartItems, totalPrice, totalQuantity } = useSelector((state) => state.cart);
-    const dispatch = useDispatch();
+    const { cartItems, totalPrice, totalQuantity } = useAppSelector((state) => state.cart);
+    const dispatch = useAppDispatch();
     const { addToast } = useToast();
 
-    const [itemToDelete, setItemToDelete] = useState(null);
+    const [itemToDelete, setItemToDelete] = useState<ICartItem | null>(null);
 
-    const handleRemoveRequest = (item) => {
+    const handleRemoveRequest = (item: ICartItem) => {
         setItemToDelete(item);
     };
 

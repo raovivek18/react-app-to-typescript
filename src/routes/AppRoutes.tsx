@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import HomePage from '../pages/HomePage';
@@ -8,7 +8,7 @@ import CheckoutPage from '../pages/CheckoutPage';
 import OrderSuccessPage from '../pages/OrderSuccessPage';
 import NotFound from '../pages/NotFound';
 
-const pageVariants = {
+const pageVariants: Variants = {
     initial: {
         opacity: 0,
         y: 20

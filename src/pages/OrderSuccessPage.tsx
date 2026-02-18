@@ -4,9 +4,20 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Package, Home } from 'lucide-react';
 import '../styles/OrderSuccessPage.css';
 
+interface LocationState {
+    orderNumber: string;
+    formData: {
+        email: string;
+        address: string;
+        city: string;
+        zipCode: string;
+    };
+}
+
 const OrderSuccessPage = () => {
     const location = useLocation();
-    const { orderNumber, formData } = location.state || {};
+    const state = location.state as LocationState | null;
+    const { orderNumber, formData } = state || {};
 
     useEffect(() => {
         if (!orderNumber) {

@@ -1,13 +1,33 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import '../components/ToastContainer.css';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
-const ToastContext = createContext(null);
+type ToastType = 'success' | 'error' | 'info';
 
-export const ToastProvider = ({ children }) => {
-    const [toasts, setToasts] = useState([]);
+interface Toast {
+    id: number;
+    message: string;
+    type: ToastType;
+    closing?: boolean;
+}
 
-    const addToast = useCallback((message, type = 'info', duration = 3000) => {
+interface ToastContextType {
+    addToast: (message: string, type?: ToastType, duration?: number) => void;
+}
+
+const ToastContext = createContext<ToastContextType | undefined>(undefined);
+
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
+    const [toasts, setToasts] = useState<Toast[]>([]);
+
+    const removeToast = useCallback((id: number) => {
+        setToasts((prev) => prev.map(t => t.id === id ? { ...t, closing: true } : t));
+        setTimeout(() => {
+            setToasts((prev) => prev.filter((t) => t.id !== id));
+        }, 300); // Wait for animation
+    }, []);
+
+    const addToast = useCallback((message: string, type: ToastType = 'info', duration = 3000) => {
         const id = Date.now() + Math.random();
         setToasts((prev) => [...prev, { id, message, type }]);
 
@@ -16,14 +36,7 @@ export const ToastProvider = ({ children }) => {
                 removeToast(id);
             }, duration);
         }
-    }, []);
-
-    const removeToast = useCallback((id) => {
-        setToasts((prev) => prev.map(t => t.id === id ? { ...t, closing: true } : t));
-        setTimeout(() => {
-            setToasts((prev) => prev.filter((t) => t.id !== id));
-        }, 300); // Wait for animation
-    }, []);
+    }, [removeToast]);
 
     return (
         <ToastContext.Provider value={{ addToast }}>

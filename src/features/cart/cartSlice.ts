@@ -1,7 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, Middleware } from '@reduxjs/toolkit';
+import { Product, CartItem } from '../../types';
+import { RootState } from '../../app/store';
+
+export interface CartState {
+    cartItems: CartItem[];
+    totalQuantity: number;
+    totalPrice: number;
+}
 
 // Helper to load cart from LocalStorage
-const loadCartFromStorage = () => {
+const loadCartFromStorage = (): CartState | undefined => {
     try {
         const serializedState = localStorage.getItem('cart');
         if (serializedState === null) {
@@ -14,13 +22,13 @@ const loadCartFromStorage = () => {
     }
 };
 
-const initialState = loadCartFromStorage() || {
+const initialState: CartState = loadCartFromStorage() || {
     cartItems: [],
     totalQuantity: 0,
     totalPrice: 0,
 };
 
-const updateTotals = (state) => {
+const updateTotals = (state: CartState) => {
     state.totalQuantity = state.cartItems.reduce((acc, item) => acc + item.quantity, 0);
     state.totalPrice = state.cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 };
@@ -29,7 +37,7 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        addToCart: (state, action) => {
+        addToCart: (state, action: PayloadAction<Product>) => {
             const existingItem = state.cartItems.find(item => item.id === action.payload.id);
             if (existingItem) {
                 existingItem.quantity += 1;
@@ -38,18 +46,18 @@ const cartSlice = createSlice({
             }
             updateTotals(state);
         },
-        removeFromCart: (state, action) => {
+        removeFromCart: (state, action: PayloadAction<number>) => {
             state.cartItems = state.cartItems.filter(item => item.id !== action.payload);
             updateTotals(state);
         },
-        increaseQuantity: (state, action) => {
+        increaseQuantity: (state, action: PayloadAction<number>) => {
             const item = state.cartItems.find(item => item.id === action.payload);
             if (item) {
                 item.quantity += 1;
                 updateTotals(state);
             }
         },
-        decreaseQuantity: (state, action) => {
+        decreaseQuantity: (state, action: PayloadAction<number>) => {
             const item = state.cartItems.find(item => item.id === action.payload);
             if (item && item.quantity > 1) {
                 item.quantity -= 1;
@@ -75,10 +83,10 @@ export const {
 } = cartSlice.actions;
 
 // Middleware to sync cart state to LocalStorage
-export const cartMiddleware = store => next => action => {
+export const cartMiddleware: Middleware = (store) => next => action => {
     const result = next(action);
-    if (action.type.startsWith('cart/')) {
-        const cartState = store.getState().cart;
+    if (typeof action === 'object' && action !== null && 'type' in action && (action as { type: string }).type.startsWith('cart/')) {
+        const cartState = (store.getState() as { cart: CartState }).cart;
         try {
             localStorage.setItem('cart', JSON.stringify(cartState));
         } catch (err) {

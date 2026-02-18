@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../app/hooks';
 import { ShoppingCart, Store, User, Menu, X, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { totalQuantity } = useSelector((state) => state.cart);
-    const { isAuthenticated } = useSelector((state) => state.user);
+    const { totalQuantity } = useAppSelector((state) => state.cart);
+    const { isAuthenticated } = useAppSelector((state) => state.user);
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
 
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path: string) => location.pathname === path;
 
     return (
         <nav className="navbar glass">

@@ -1,11 +1,17 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { increaseQuantity, decreaseQuantity, removeFromCart } from '../features/cart/cartSlice';
+import { useAppDispatch } from '../app/hooks';
+import { increaseQuantity, decreaseQuantity } from '../features/cart/cartSlice';
 import { Trash2, Plus, Minus } from 'lucide-react';
+import { CartItem as ICartItem } from '../types';
 import './CartItem.css';
 
-const CartItem = React.memo(({ item, onRemove }) => {
-    const dispatch = useDispatch();
+interface CartItemProps {
+    item: ICartItem;
+    onRemove: (item: ICartItem) => void;
+}
+
+const CartItem = React.memo(({ item, onRemove }: CartItemProps) => {
+    const dispatch = useAppDispatch();
 
     const imageUrl = item.images?.[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
 

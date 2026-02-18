@@ -1,34 +1,41 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchProductById, fetchProducts, clearSelectedProduct } from './productsSlice';
 import { addToCart } from '../cart/cartSlice';
 import { ShoppingCart, Check, ShieldCheck, Truck, RefreshCw, Star, ChevronRight } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useToast } from '../../context/ToastContext';
+import { Product } from '../../types';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+    const { id } = useParams<{ id: string }>();
+    const dispatch = useAppDispatch();
     const { addToast } = useToast();
-    const { selectedProduct, products, loading, error } = useSelector((state) => state.products);
+    const { selectedProduct, products, loading, error } = useAppSelector((state) => state.products);
     const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(fetchProductById(id));
+        if (id) {
+            dispatch(fetchProductById(id));
+        }
         if (products.length === 0) {
             dispatch(fetchProducts());
         }
-        return () => dispatch(clearSelectedProduct());
-    }, [dispatch, id]);
+        return () => {
+            dispatch(clearSelectedProduct());
+        };
+    }, [dispatch, id, products.length]);
 
     const images = selectedProduct?.images?.map(img => img.replace(/[\[\]"]/g, '')) || [];
 
     const handleAddToCart = () => {
-        dispatch(addToCart(selectedProduct));
-        addToast(`Added ${selectedProduct.title} to your cart`, 'success');
+        if (selectedProduct) {
+            dispatch(addToCart(selectedProduct));
+            addToast(`Added ${selectedProduct.title} to your cart`, 'success');
+        }
     };
 
     const relatedProducts = useMemo(() => {
