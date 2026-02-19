@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction, Middleware } from '@reduxjs/toolkit';
 import { Product, CartItem } from '../../types';
-import { RootState } from '../../app/store';
 
 export interface CartState {
     cartItems: CartItem[];
@@ -83,10 +82,10 @@ export const {
 } = cartSlice.actions;
 
 // Middleware to sync cart state to LocalStorage
-export const cartMiddleware: Middleware = (store) => next => action => {
+export const cartMiddleware: Middleware<{}, { cart: CartState }> = (store) => next => action => {
     const result = next(action);
     if (typeof action === 'object' && action !== null && 'type' in action && (action as { type: string }).type.startsWith('cart/')) {
-        const cartState = (store.getState() as { cart: CartState }).cart;
+        const cartState = store.getState().cart;
         try {
             localStorage.setItem('cart', JSON.stringify(cartState));
         } catch (err) {
