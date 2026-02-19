@@ -7,7 +7,15 @@ import { ToastProvider } from './context/ToastContext';
 import { ThemeProvider } from './context/ThemeContext';
 import './styles/global.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const rootElement: HTMLElement | null = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Failed to find the root element');
+}
+
+const root: ReactDOM.Root = ReactDOM.createRoot(rootElement);
+
+root.render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider>
