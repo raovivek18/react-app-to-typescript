@@ -10,7 +10,7 @@ import { CartItem as ICartItem } from '../../types';
 import './CartPage.css';
 
 const CartPage = () => {
-    const { cartItems, totalPrice, totalQuantity } = useAppSelector((state) => state.cart);
+    const { cartItems, totalPrice, subtotal, shipping, tax, totalQuantity } = useAppSelector((state) => state.cart);
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
 
@@ -84,15 +84,17 @@ const CartPage = () => {
                         <div className="summary-body">
                             <div className="summary-row">
                                 <span>Subtotal</span>
-                                <span>${totalPrice.toFixed(2)}</span>
+                                <span>${subtotal.toFixed(2)}</span>
                             </div>
                             <div className="summary-row">
-                                <span>Concierge Shipping</span>
-                                <span className="free-tag">Free</span>
+                                <span>Shipping</span>
+                                <span className={shipping === 0 ? 'free-tag' : ''}>
+                                    {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+                                </span>
                             </div>
                             <div className="summary-row">
-                                <span>Estimated Duties</span>
-                                <span>Included</span>
+                                <span>Tax</span>
+                                <span>${tax.toFixed(2)}</span>
                             </div>
                             <div className="summary-divider"></div>
                             <div className="summary-row total-row">

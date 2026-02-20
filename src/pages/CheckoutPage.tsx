@@ -25,7 +25,7 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
-    const { cartItems, totalPrice } = useAppSelector(state => state.cart);
+    const { cartItems, totalPrice, subtotal, shipping, tax } = useAppSelector(state => state.cart);
 
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<FormData>({
@@ -282,6 +282,21 @@ const CheckoutPage = () => {
                                     <span className="item-price">${(item.price * item.quantity).toFixed(2)}</span>
                                 </div>
                             ))}
+                        </div>
+                        <div className="summary-divider"></div>
+                        <div className="summary-details">
+                            <div className="summary-row">
+                                <span>Subtotal</span>
+                                <span>${subtotal.toFixed(2)}</span>
+                            </div>
+                            <div className="summary-row">
+                                <span>Shipping</span>
+                                <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+                            </div>
+                            <div className="summary-row">
+                                <span>Tax</span>
+                                <span>${tax.toFixed(2)}</span>
+                            </div>
                         </div>
                         <div className="summary-divider"></div>
                         <div className="summary-total">

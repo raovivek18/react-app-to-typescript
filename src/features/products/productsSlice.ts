@@ -3,7 +3,7 @@ import { getAllProducts, getProductById } from '../../services/api';
 import { Product } from '../../types';
 import type { RootState } from '../../app/store';
 
-export const fetchProducts = createAsyncThunk<Product[], void, { state: RootState }>(
+export const fetchProducts = createAsyncThunk<Product[], void, { state: RootState; rejectValue: string }>(
     'products/fetchProducts',
     async (_, { getState, rejectWithValue }) => {
         try {
@@ -21,7 +21,7 @@ export const fetchProducts = createAsyncThunk<Product[], void, { state: RootStat
     }
 );
 
-export const fetchProductById = createAsyncThunk<Product, string | number, { state: RootState }>(
+export const fetchProductById = createAsyncThunk<Product, string | number, { state: RootState; rejectValue: string }>(
     'products/fetchProductById',
     async (id, { getState, rejectWithValue }) => {
         try {
@@ -74,7 +74,7 @@ const productsSlice = createSlice({
             })
             .addCase(fetchProducts.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string;
+                state.error = action.payload || action.error.message || 'Failed to fetch products';
             })
             .addCase(fetchProductById.pending, (state) => {
                 state.loading = true;
@@ -86,7 +86,7 @@ const productsSlice = createSlice({
             })
             .addCase(fetchProductById.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string;
+                state.error = action.payload || action.error.message || 'Failed to fetch product details';
             });
     },
 });
