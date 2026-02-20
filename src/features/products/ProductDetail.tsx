@@ -1,33 +1,43 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchProductById, fetchProducts, clearSelectedProduct } from './productsSlice';
 import { addToCart } from '../cart/cartSlice';
-import { ShoppingCart, Check, ShieldCheck, Truck, RefreshCw, Star, ChevronRight } from 'lucide-react';
+import { ShoppingCart, Check, ShieldCheck, Truck, RefreshCw, Star, ChevronRight, AlertCircle } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useToast } from '../../context/ToastContext';
-import { Product } from '../../types';
+import { Product, ProductParams } from '../../types';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams<ProductParams>();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
     const { selectedProduct, products, loading, error } = useAppSelector((state) => state.products);
     const [activeImage, setActiveImage] = useState(0);
 
+    const isValidId = useMemo(() => {
+        if (!id) return false;
+        const num = parseInt(id);
+        return !isNaN(num) && num > 0;
+    }, [id]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (id) {
+
+        if (id && isValidId) {
             dispatch(fetchProductById(id));
         }
+
         if (products.length === 0) {
             dispatch(fetchProducts());
         }
+
         return () => {
             dispatch(clearSelectedProduct());
         };
-    }, [dispatch, id, products.length]);
+    }, [dispatch, id, isValidId, products.length]);
 
     const images = selectedProduct?.images?.map(img => img.replace(/[\[\]"]/g, '')) || [];
 
@@ -44,6 +54,21 @@ const ProductDetail = () => {
             .filter(p => p.category?.id === selectedProduct.category?.id && p.id !== selectedProduct.id)
             .slice(0, 4);
     }, [selectedProduct, products]);
+
+    if (!isValidId && id) {
+        return (
+            <div className="container">
+                <div className="error-message glass animate-fade-in" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                    <AlertCircle size={64} style={{ color: 'var(--accent-red)', marginBottom: '1.5rem' }} />
+                    <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Invalid Selection</h3>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>The product you are looking for does not exist in our collections.</p>
+                    <Link to="/" className="premium-btn">
+                        Return to Collections
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     if (loading && !selectedProduct) {
         return (
@@ -64,10 +89,11 @@ const ProductDetail = () => {
     if (error) {
         return (
             <div className="container">
-                <div className="error-message">
-                    <h3>Something went wrong</h3>
-                    <p>{error}</p>
-                    <Link to="/" className="premium-btn" style={{ marginTop: '1rem' }}>Return to Shop</Link>
+                <div className="error-message glass animate-fade-in" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                    <AlertCircle size={64} style={{ color: 'var(--accent-red)', marginBottom: '1.5rem' }} />
+                    <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Something went wrong</h3>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{error}</p>
+                    <Link to="/" className="premium-btn">Return to Shop</Link>
                 </div>
             </div>
         );
