@@ -11,7 +11,6 @@ import './ProductDetail.css';
 
 const ProductDetail = () => {
     const { id } = useParams<ProductParams>();
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
     const { selectedProduct, products, loading, error } = useAppSelector((state) => state.products);
@@ -39,21 +38,10 @@ const ProductDetail = () => {
         };
     }, [dispatch, id, isValidId, products.length]);
 
-    const images = selectedProduct?.images?.map(img => img.replace(/[\[\]"]/g, '')) || [];
-
-    const handleAddToCart = () => {
-        if (selectedProduct) {
-            dispatch(addToCart(selectedProduct));
-            addToast(`Added ${selectedProduct.title} to your cart`, 'success');
-        }
+    const handleAddToCart = (product: Product) => {
+        dispatch(addToCart(product));
+        addToast(`Added ${product.title} to your cart`, 'success');
     };
-
-    const relatedProducts = useMemo(() => {
-        if (!selectedProduct || !products.length) return [];
-        return products
-            .filter(p => p.category?.id === selectedProduct.category?.id && p.id !== selectedProduct.id)
-            .slice(0, 4);
-    }, [selectedProduct, products]);
 
     if (!isValidId && id) {
         return (
@@ -101,6 +89,19 @@ const ProductDetail = () => {
 
     if (!selectedProduct) return null;
 
+    // Derived state - safe since selectedProduct is guaranteed here
+    const images: string[] = useMemo(() =>
+        selectedProduct.images.map(img => img.replace(/[\[\]"]/g, '')),
+        [selectedProduct.images]
+    );
+
+    const relatedProducts: Product[] = useMemo(() =>
+        products
+            .filter(p => p.category.id === selectedProduct.category.id && p.id !== selectedProduct.id)
+            .slice(0, 4),
+        [products, selectedProduct]
+    );
+
     return (
         <div className="product-detail-page animate-fade-in">
             <div className="container">
@@ -108,7 +109,7 @@ const ProductDetail = () => {
                 <nav className="breadcrumb">
                     <Link to="/">Home</Link>
                     <ChevronRight size={14} />
-                    <span className="category-crumb">{selectedProduct.category?.name}</span>
+                    <span className="category-crumb">{selectedProduct.category.name}</span>
                     <ChevronRight size={14} />
                     <span className="current-crumb">{selectedProduct.title}</span>
                 </nav>
@@ -138,7 +139,7 @@ const ProductDetail = () => {
 
                     <div className="product-info-panel">
                         <div className="info-header">
-                            <span className="info-category badge glass">{selectedProduct.category?.name || 'Category'}</span>
+                            <span className="info-category badge glass">{selectedProduct.category.name || 'Category'}</span>
                             <div className="rating">
                                 <Star size={16} fill="currentColor" className="star-icon" />
                                 <Star size={16} fill="currentColor" className="star-icon" />
@@ -167,7 +168,7 @@ const ProductDetail = () => {
                         <div className="action-selection">
                             <button
                                 className="premium-btn add-to-bag-btn"
-                                onClick={handleAddToCart}
+                                onClick={() => handleAddToCart(selectedProduct)}
                             >
                                 <ShoppingCart size={22} />
                                 Add to Shopping Bag
