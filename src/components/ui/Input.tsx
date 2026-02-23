@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, ReactNode } from 'react';
+import React, { InputHTMLAttributes, ReactNode, forwardRef } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -7,7 +7,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     containerClassName?: string;
 }
 
-const Input = ({
+const Input = forwardRef<HTMLInputElement, InputProps>(({
     label,
     error,
     icon,
@@ -15,7 +15,7 @@ const Input = ({
     containerClassName = '',
     id,
     ...props
-}: InputProps) => {
+}, ref) => {
     const inputId = id || `input-${props.name || Math.random().toString(36).substr(2, 9)}`;
 
     return (
@@ -25,6 +25,7 @@ const Input = ({
                 {icon && <span className="input-icon">{icon}</span>}
                 <input
                     id={inputId}
+                    ref={ref}
                     className={`${className} ${error ? 'error' : ''}`}
                     {...props}
                 />
@@ -32,6 +33,8 @@ const Input = ({
             {error && <span className="error-text">{error}</span>}
         </div>
     );
-};
+});
+
+Input.displayName = 'Input';
 
 export default Input;

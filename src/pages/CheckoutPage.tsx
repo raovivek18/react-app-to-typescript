@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart } from '../features/cart/cartSlice';
 import { motion } from 'framer-motion';
@@ -8,20 +9,8 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
+import { CheckoutFormData } from '../types';
 import '../styles/CheckoutPage.css';
-
-interface FormData {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
-    city: string;
-    zipCode: string;
-    cardNumber: string;
-    expiryDate: string;
-    cvv: string;
-}
 
 const CheckoutPage = () => {
     const navigate = useNavigate();
@@ -30,53 +19,26 @@ const CheckoutPage = () => {
     const { cartItems, totalPrice, subtotal, shipping, tax } = useAppSelector(state => state.cart);
 
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<FormData>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        address: '',
-        city: '',
-        zipCode: '',
-        cardNumber: '',
-        expiryDate: '',
-        cvv: ''
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<CheckoutFormData>({
+        defaultValues: {
+            fullName: '',
+            email: '',
+            phone: '',
+            address: '',
+            city: '',
+            postalCode: '',
+            cardNumber: '',
+            expiryDate: '',
+            cvv: ''
+        }
     });
 
-    const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name as keyof FormData]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
-    };
-
-    const validate = () => {
-        const newErrors: Partial<Record<keyof FormData, string>> = {};
-        if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-        if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-        if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Valid email is required';
-        if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-        if (!formData.address.trim()) newErrors.address = 'Address is required';
-        if (!formData.city.trim()) newErrors.city = 'City is required';
-        if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
-        if (!formData.cardNumber.trim() || formData.cardNumber.length !== 16) newErrors.cardNumber = 'Valid 16-digit card number is required';
-        if (!formData.expiryDate.trim()) newErrors.expiryDate = 'Expiry date is required';
-        if (!formData.cvv.trim() || formData.cvv.length !== 3) newErrors.cvv = 'Valid 3-digit CVV is required';
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!validate()) {
-            addToast('Please fix the errors in the form', 'error');
-            return;
-        }
-
+    const onSubmit: SubmitHandler<CheckoutFormData> = async (data) => {
         setLoading(true);
 
         setTimeout(() => {
@@ -84,7 +46,7 @@ const CheckoutPage = () => {
             dispatch(clearCart());
             setLoading(false);
             addToast('Order placed successfully!', 'success');
-            navigate('/order-success', { state: { orderNumber, formData } });
+            navigate('/order-success', { state: { orderNumber, formData: data } });
         }, 2000);
     };
 
@@ -112,67 +74,52 @@ const CheckoutPage = () => {
 
             <div className="checkout-grid">
                 <div className="checkout-form-section">
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-section">
                             <h3>Billing Information</h3>
-                            <div className="form-row">
-                                <Input
-                                    label="First Name"
-                                    name="firstName"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    error={errors.firstName}
-                                />
-                                <Input
-                                    label="Last Name"
-                                    name="lastName"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    error={errors.lastName}
-                                />
-                            </div>
+                            <Input
+                                label="Full Name"
+                                {...register('fullName', { required: 'Full name is required' })}
+                                error={errors.fullName?.message}
+                            />
 
                             <div className="form-row">
                                 <Input
                                     label="Email"
                                     type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    error={errors.email}
+                                    {...register('email', {
+                                        required: 'Email is required',
+                                        pattern: {
+                                            value: /\S+@\S+\.\S+/,
+                                            message: 'Valid email is required'
+                                        }
+                                    })}
+                                    error={errors.email?.message}
                                 />
                                 <Input
                                     label="Phone"
                                     type="tel"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    error={errors.phone}
+                                    {...register('phone', { required: 'Phone number is required' })}
+                                    error={errors.phone?.message}
                                 />
                             </div>
 
                             <Input
                                 label="Address"
-                                name="address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                error={errors.address}
+                                {...register('address', { required: 'Address is required' })}
+                                error={errors.address?.message}
                             />
 
                             <div className="form-row">
                                 <Input
                                     label="City"
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    error={errors.city}
+                                    {...register('city', { required: 'City is required' })}
+                                    error={errors.city?.message}
                                 />
                                 <Input
-                                    label="ZIP Code"
-                                    name="zipCode"
-                                    value={formData.zipCode}
-                                    onChange={handleChange}
-                                    error={errors.zipCode}
+                                    label="Postal Code"
+                                    {...register('postalCode', { required: 'Postal code is required' })}
+                                    error={errors.postalCode?.message}
                                 />
                             </div>
                         </div>
@@ -181,33 +128,34 @@ const CheckoutPage = () => {
                             <h3>Payment Information</h3>
                             <Input
                                 label="Card Number"
-                                name="cardNumber"
                                 placeholder="1234 5678 9012 3456"
                                 maxLength={16}
-                                value={formData.cardNumber}
-                                onChange={handleChange}
-                                error={errors.cardNumber}
+                                {...register('cardNumber', {
+                                    required: 'Card number is required',
+                                    minLength: { value: 16, message: 'Valid 16-digit card number is required' },
+                                    maxLength: { value: 16, message: 'Valid 16-digit card number is required' }
+                                })}
+                                error={errors.cardNumber?.message}
                                 icon={<CreditCard size={20} />}
                             />
 
                             <div className="form-row">
                                 <Input
                                     label="Expiry Date"
-                                    name="expiryDate"
                                     placeholder="MM/YY"
                                     maxLength={5}
-                                    value={formData.expiryDate}
-                                    onChange={handleChange}
-                                    error={errors.expiryDate}
+                                    {...register('expiryDate', { required: 'Expiry date is required' })}
+                                    error={errors.expiryDate?.message}
                                 />
                                 <Input
                                     label="CVV"
-                                    name="cvv"
                                     placeholder="123"
                                     maxLength={3}
-                                    value={formData.cvv}
-                                    onChange={handleChange}
-                                    error={errors.cvv}
+                                    {...register('cvv', {
+                                        required: 'CVV is required',
+                                        minLength: { value: 3, message: 'Valid 3-digit CVV is required' }
+                                    })}
+                                    error={errors.cvv?.message}
                                     icon={<Lock size={18} />}
                                 />
                             </div>

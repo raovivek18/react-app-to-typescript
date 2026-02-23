@@ -4,14 +4,11 @@ import { motion } from 'framer-motion';
 import { CheckCircle, Package, Home } from 'lucide-react';
 import '../styles/OrderSuccessPage.css';
 
+import { CheckoutFormData } from '../types';
+
 interface LocationState {
     orderNumber: string;
-    formData: {
-        email: string;
-        address: string;
-        city: string;
-        zipCode: string;
-    };
+    formData: CheckoutFormData;
 }
 
 const OrderSuccessPage = () => {
@@ -81,7 +78,7 @@ const OrderSuccessPage = () => {
                     </div>
                     <div className="detail-row">
                         <span className="detail-label">Delivery Address</span>
-                        <span className="detail-value">{formData?.address}, {formData?.city} {formData?.zipCode}</span>
+                        <span className="detail-value">{formData?.address}, {formData?.city} {formData?.postalCode}</span>
                     </div>
                 </motion.div>
 
