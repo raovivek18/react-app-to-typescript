@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
 import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, X, AlertTriangle } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { CartItem as ICartItem } from '../../types';
+import Button from '../../components/ui/Button';
+import Modal from '../../components/ui/Modal';
 import './CartPage.css';
 
 const CartPage = () => {
@@ -115,35 +117,35 @@ const CartPage = () => {
             </div>
 
             {/* Confirmation Modal */}
-            <AnimatePresence>
-                {itemToDelete && (
-                    <motion.div
-                        className="modal-overlay"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        <motion.div
-                            className="modal-content glass"
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
+            <Modal
+                isOpen={!!itemToDelete}
+                onClose={() => setItemToDelete(null)}
+                title="Remove Item?"
+                size="small"
+                footer={
+                    <div className="modal-actions">
+                        <Button
+                            variant="primary"
+                            className="outline small"
+                            onClick={() => setItemToDelete(null)}
                         >
-                            <div className="modal-header">
-                                <AlertTriangle size={24} className="warning-icon" />
-                                <h3>Remove Item?</h3>
-                            </div>
-                            <p>Are you sure you want to remove <strong>{itemToDelete.title}</strong> from your shopping bag?</p>
-                            <div className="modal-actions">
-                                <button className="premium-btn outline small" onClick={() => setItemToDelete(null)}>Cancel</button>
-                                <button className="premium-btn danger small" onClick={confirmRemove}>Remove</button>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="danger"
+                            className="small"
+                            onClick={confirmRemove}
+                        >
+                            Remove
+                        </Button>
+                    </div>
+                }
+            >
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+                    <AlertTriangle size={24} className="warning-icon" />
+                    <p style={{ margin: 0 }}>Are you sure you want to remove <strong>{itemToDelete?.title}</strong> from your shopping bag?</p>
+                </div>
+            </Modal>
         </div>
     );
 };

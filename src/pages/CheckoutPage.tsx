@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart } from '../features/cart/cartSlice';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CreditCard, Lock, Loader } from 'lucide-react';
+import { ArrowLeft, CreditCard, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import Button from '../components/ui/Button';
+import Input from '../components/ui/Input';
 import '../styles/CheckoutPage.css';
 
 interface FormData {
@@ -114,158 +116,111 @@ const CheckoutPage = () => {
                         <div className="form-section">
                             <h3>Billing Information</h3>
                             <div className="form-row">
-                                <div className="form-group">
-                                    <label>First Name</label>
-                                    <input
-                                        type="text"
-                                        name="firstName"
-                                        value={formData.firstName}
-                                        onChange={handleChange}
-                                        className={errors.firstName ? 'error' : ''}
-                                    />
-                                    {errors.firstName && <span className="error-text">{errors.firstName}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <label>Last Name</label>
-                                    <input
-                                        type="text"
-                                        name="lastName"
-                                        value={formData.lastName}
-                                        onChange={handleChange}
-                                        className={errors.lastName ? 'error' : ''}
-                                    />
-                                    {errors.lastName && <span className="error-text">{errors.lastName}</span>}
-                                </div>
-                            </div>
-
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className={errors.email ? 'error' : ''}
-                                    />
-                                    {errors.email && <span className="error-text">{errors.email}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <label>Phone</label>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className={errors.phone ? 'error' : ''}
-                                    />
-                                    {errors.phone && <span className="error-text">{errors.phone}</span>}
-                                </div>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Address</label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={formData.address}
+                                <Input
+                                    label="First Name"
+                                    name="firstName"
+                                    value={formData.firstName}
                                     onChange={handleChange}
-                                    className={errors.address ? 'error' : ''}
+                                    error={errors.firstName}
                                 />
-                                {errors.address && <span className="error-text">{errors.address}</span>}
+                                <Input
+                                    label="Last Name"
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    error={errors.lastName}
+                                />
                             </div>
 
                             <div className="form-row">
-                                <div className="form-group">
-                                    <label>City</label>
-                                    <input
-                                        type="text"
-                                        name="city"
-                                        value={formData.city}
-                                        onChange={handleChange}
-                                        className={errors.city ? 'error' : ''}
-                                    />
-                                    {errors.city && <span className="error-text">{errors.city}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <label>ZIP Code</label>
-                                    <input
-                                        type="text"
-                                        name="zipCode"
-                                        value={formData.zipCode}
-                                        onChange={handleChange}
-                                        className={errors.zipCode ? 'error' : ''}
-                                    />
-                                    {errors.zipCode && <span className="error-text">{errors.zipCode}</span>}
-                                </div>
+                                <Input
+                                    label="Email"
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    error={errors.email}
+                                />
+                                <Input
+                                    label="Phone"
+                                    type="tel"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    error={errors.phone}
+                                />
+                            </div>
+
+                            <Input
+                                label="Address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                error={errors.address}
+                            />
+
+                            <div className="form-row">
+                                <Input
+                                    label="City"
+                                    name="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
+                                    error={errors.city}
+                                />
+                                <Input
+                                    label="ZIP Code"
+                                    name="zipCode"
+                                    value={formData.zipCode}
+                                    onChange={handleChange}
+                                    error={errors.zipCode}
+                                />
                             </div>
                         </div>
 
                         <div className="form-section">
                             <h3>Payment Information</h3>
-                            <div className="form-group">
-                                <label>Card Number</label>
-                                <div className="input-with-icon">
-                                    <CreditCard size={20} />
-                                    <input
-                                        type="text"
-                                        name="cardNumber"
-                                        placeholder="1234 5678 9012 3456"
-                                        maxLength={16}
-                                        value={formData.cardNumber}
-                                        onChange={handleChange}
-                                        className={errors.cardNumber ? 'error' : ''}
-                                    />
-                                </div>
-                                {errors.cardNumber && <span className="error-text">{errors.cardNumber}</span>}
-                            </div>
+                            <Input
+                                label="Card Number"
+                                name="cardNumber"
+                                placeholder="1234 5678 9012 3456"
+                                maxLength={16}
+                                value={formData.cardNumber}
+                                onChange={handleChange}
+                                error={errors.cardNumber}
+                                icon={<CreditCard size={20} />}
+                            />
 
                             <div className="form-row">
-                                <div className="form-group">
-                                    <label>Expiry Date</label>
-                                    <input
-                                        type="text"
-                                        name="expiryDate"
-                                        placeholder="MM/YY"
-                                        maxLength={5}
-                                        value={formData.expiryDate}
-                                        onChange={handleChange}
-                                        className={errors.expiryDate ? 'error' : ''}
-                                    />
-                                    {errors.expiryDate && <span className="error-text">{errors.expiryDate}</span>}
-                                </div>
-                                <div className="form-group">
-                                    <label>CVV</label>
-                                    <div className="input-with-icon">
-                                        <Lock size={18} />
-                                        <input
-                                            type="text"
-                                            name="cvv"
-                                            placeholder="123"
-                                            maxLength={3}
-                                            value={formData.cvv}
-                                            onChange={handleChange}
-                                            className={errors.cvv ? 'error' : ''}
-                                        />
-                                    </div>
-                                    {errors.cvv && <span className="error-text">{errors.cvv}</span>}
-                                </div>
+                                <Input
+                                    label="Expiry Date"
+                                    name="expiryDate"
+                                    placeholder="MM/YY"
+                                    maxLength={5}
+                                    value={formData.expiryDate}
+                                    onChange={handleChange}
+                                    error={errors.expiryDate}
+                                />
+                                <Input
+                                    label="CVV"
+                                    name="cvv"
+                                    placeholder="123"
+                                    maxLength={3}
+                                    value={formData.cvv}
+                                    onChange={handleChange}
+                                    error={errors.cvv}
+                                    icon={<Lock size={18} />}
+                                />
                             </div>
                         </div>
 
-                        <button type="submit" className="premium-btn checkout-submit-btn" disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <Loader className="spinner" size={20} />
-                                    Processing...
-                                </>
-                            ) : (
-                                <>
-                                    <Lock size={20} />
-                                    Place Order ${totalPrice.toFixed(2)}
-                                </>
-                            )}
-                        </button>
+                        <Button
+                            type="submit"
+                            className="checkout-submit-btn"
+                            isLoading={loading}
+                            leftIcon={!loading && <Lock size={20} />}
+                        >
+                            Place Order ${totalPrice.toFixed(2)}
+                        </Button>
                     </form>
                 </div>
 

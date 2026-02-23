@@ -22,10 +22,11 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => response,
-    (error: AxiosError) => {
+    (error: AxiosError<ApiError>) => {
         const customError: ApiError = {
-            message: (error.response?.data as any)?.message || error.message || 'An unknown error occurred',
+            message: error.response?.data?.message || error.message || 'An unknown error occurred',
             status: error.response?.status,
+            statusCode: error.response?.status
         };
         return Promise.reject(customError);
     }

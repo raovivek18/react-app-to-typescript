@@ -15,8 +15,11 @@ export const fetchProducts = createAsyncThunk<Product[], void, { state: RootStat
 
             const data = await getAllProducts();
             return data;
-        } catch (error) {
-            return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+        } catch (error: unknown) {
+            if (error && typeof error === 'object' && 'message' in error) {
+                return rejectWithValue((error as { message: string }).message);
+            }
+            return rejectWithValue('An unexpected error occurred while fetching products');
         }
     }
 );
@@ -34,8 +37,11 @@ export const fetchProductById = createAsyncThunk<Product, string | number, { sta
 
             const data = await getProductById(id);
             return data;
-        } catch (error) {
-            return rejectWithValue(error instanceof Error ? error.message : 'An unknown error occurred');
+        } catch (error: unknown) {
+            if (error && typeof error === 'object' && 'message' in error) {
+                return rejectWithValue((error as { message: string }).message);
+            }
+            return rejectWithValue('An unexpected error occurred while fetching product details');
         }
     }
 );
