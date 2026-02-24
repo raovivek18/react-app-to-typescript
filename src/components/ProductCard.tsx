@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../app/hooks';
 import { addToCart } from '../features/cart/cartSlice';
@@ -13,11 +13,11 @@ interface ProductCardProps {
     index?: number;
 }
 
-const ProductCard = React.memo(({ product, index = 0 }: ProductCardProps) => {
+const ProductCard = memo(({ product, index = 0 }: ProductCardProps) => {
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    const handleAddToCart = (e: MouseEvent) => {
         e.preventDefault();
         dispatch(addToCart(product));
         addToast(`${product.title} added to cart`, 'success');
@@ -52,9 +52,7 @@ const ProductCard = React.memo(({ product, index = 0 }: ProductCardProps) => {
                         <ShoppingCart size={18} />
                     </motion.button>
                 </div>
-                {product.category && (
-                    <span className="card-badge-top glass">{product.category.name}</span>
-                )}
+                <span className="card-badge-top glass">{product.category.name}</span>
             </div>
 
             <div className="card-content">

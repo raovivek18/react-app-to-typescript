@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { useAppDispatch } from '../app/hooks';
 import { increaseQuantity, decreaseQuantity } from '../features/cart/cartSlice';
 import { Trash2, Plus, Minus } from 'lucide-react';
@@ -10,10 +10,10 @@ interface CartItemProps {
     onRemove: (item: ICartItem) => void;
 }
 
-const CartItem = React.memo(({ item, onRemove }: CartItemProps) => {
+const CartItem = memo(({ item, onRemove }: CartItemProps) => {
     const dispatch = useAppDispatch();
 
-    const imageUrl = item.images?.[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
+    const imageUrl = item.images[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
 
     return (
         <div className="cart-item glass animate-fade-in">
@@ -23,7 +23,7 @@ const CartItem = React.memo(({ item, onRemove }: CartItemProps) => {
 
             <div className="item-info">
                 <div className="item-meta">
-                    <span className="item-category">{item.category?.name}</span>
+                    <span className="item-category">{item.category.name}</span>
                     <h3 className="item-title">{item.title}</h3>
                 </div>
 

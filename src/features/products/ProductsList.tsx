@@ -13,7 +13,7 @@ const ProductsList = ({ products, loading, error }: ProductsListProps) => {
     if (loading && (!products || products.length === 0)) {
         return (
             <div className="products-grid">
-                {[...Array(8)].map((_, i) => (
+                {[...Array(8)].map((_, i: number) => (
                     <div key={i} className="product-card premium-card skeleton">
                         <div className="card-image-wrapper skeleton" style={{ height: '300px' }}></div>
                         <div className="card-content">

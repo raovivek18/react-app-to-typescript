@@ -1,9 +1,9 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchProductById, fetchProducts, clearSelectedProduct } from './productsSlice';
 import { addToCart } from '../cart/cartSlice';
-import { ShoppingCart, Check, ShieldCheck, Truck, RefreshCw, Star, ChevronRight, AlertCircle } from 'lucide-react';
+import { ShoppingCart, ShieldCheck, Truck, RefreshCw, Star, ChevronRight, AlertCircle } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useToast } from '../../context/ToastContext';
 import { Product, ProductParams } from '../../types';

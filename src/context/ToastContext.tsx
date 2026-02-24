@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import '../components/ToastContainer.css';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
@@ -27,7 +27,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
         }, 300); // Wait for animation
     }, []);
 
-    const addToast = useCallback((message: string, type: ToastType = 'info', duration = 3000) => {
+    const addToast = useCallback((message: string, type: ToastType = 'info', duration: number = 3000) => {
         const id = Date.now() + Math.random();
         setToasts((prev) => [...prev, { id, message, type }]);
 

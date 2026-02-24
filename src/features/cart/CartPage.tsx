@@ -3,9 +3,9 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { clearCart, removeFromCart } from './cartSlice';
 import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
-import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, X, AlertTriangle } from 'lucide-react';
+import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
-import { motion } from 'framer-motion';
+
 import { CartItem as ICartItem } from '../../types';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
@@ -141,10 +141,12 @@ const CartPage = () => {
                     </div>
                 }
             >
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-                    <AlertTriangle size={24} className="warning-icon" />
-                    <p style={{ margin: 0 }}>Are you sure you want to remove <strong>{itemToDelete?.title}</strong> from your shopping bag?</p>
-                </div>
+                {itemToDelete && (
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+                        <AlertTriangle size={24} className="warning-icon" />
+                        <p style={{ margin: 0 }}>Are you sure you want to remove <strong>{itemToDelete.title}</strong> from your shopping bag?</p>
+                    </div>
+                )}
             </Modal>
         </div>
     );

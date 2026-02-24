@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, ReactNode, forwardRef } from 'react';
+import { InputHTMLAttributes, ReactNode, forwardRef } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string;
@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     id,
     ...props
 }, ref) => {
-    const inputId = id || `input-${props.name || Math.random().toString(36).substr(2, 9)}`;
+    const inputId = id || `input-${props.name || Math.random().toString(36).slice(2, 11)}`;
 
     return (
         <div className={`form-group ${containerClassName}`}>

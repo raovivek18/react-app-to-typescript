@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
@@ -38,7 +38,7 @@ const Modal = ({
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: MouseEvent) => e.stopPropagation()}
                     >
                         {(title || showCloseButton) && (
                             <div className="modal-header">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchProducts } from '../features/products/productsSlice';
 import Hero from '../components/Hero';
@@ -21,7 +21,7 @@ const HomePage = () => {
     // Extract unique categories
     const categories = useMemo(() => {
         if (!products) return [];
-        const cats = products.map(p => p.category?.name).filter(Boolean);
+        const cats = products.map(p => p.category.name).filter(Boolean);
         return [...new Set(cats)];
     }, [products]);
 
@@ -31,7 +31,7 @@ const HomePage = () => {
         let result = [...products];
 
         if (selectedCategory) {
-            result = result.filter(p => p.category?.name === selectedCategory);
+            result = result.filter(p => p.category.name === selectedCategory);
         }
 
         if (sortBy === 'price-asc') {

@@ -14,15 +14,16 @@ interface LocationState {
 const OrderSuccessPage = () => {
     const location = useLocation();
     const state = location.state as LocationState | null;
-    const { orderNumber, formData } = state || {};
 
     useEffect(() => {
-        if (!orderNumber) {
+        if (!state?.orderNumber) {
             window.location.href = '/';
         }
-    }, [orderNumber]);
+    }, [state]);
 
-    if (!orderNumber) return null;
+    if (!state || !state.orderNumber) return null;
+
+    const { orderNumber, formData } = state;
 
     return (
         <motion.div
@@ -74,11 +75,11 @@ const OrderSuccessPage = () => {
                     </div>
                     <div className="detail-row">
                         <span className="detail-label">Email</span>
-                        <span className="detail-value">{formData?.email}</span>
+                        <span className="detail-value">{formData.email}</span>
                     </div>
                     <div className="detail-row">
                         <span className="detail-label">Delivery Address</span>
-                        <span className="detail-value">{formData?.address}, {formData?.city} {formData?.postalCode}</span>
+                        <span className="detail-value">{formData.address}, {formData.city} {formData.postalCode}</span>
                     </div>
                 </motion.div>
 
@@ -105,7 +106,7 @@ const OrderSuccessPage = () => {
                     transition={{ delay: 0.7 }}
                 >
                     <p>📦 Estimated delivery: 3-5 business days</p>
-                    <p>📧 A confirmation email has been sent to {formData?.email}</p>
+                    <p>📧 A confirmation email has been sent to {formData.email}</p>
                 </motion.div>
             </div>
         </motion.div>

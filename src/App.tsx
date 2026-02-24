@@ -1,11 +1,8 @@
-import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
 import AppRoutes from './routes/AppRoutes';
 
-interface AppProps { }
-
-const App: React.FC<AppProps> = (): React.JSX.Element => {
+const App = () => {
   return (
     <Router>
       <ScrollToTop />
