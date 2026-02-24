@@ -2,14 +2,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 import '../components/ToastContainer.css';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
-type ToastType = 'success' | 'error' | 'info';
-
-interface Toast {
-    id: number;
-    message: string;
-    type: ToastType;
-    closing?: boolean;
-}
+import { Toast, ToastType } from '../types';
 
 interface ToastContextType {
     addToast: (message: string, type?: ToastType, duration?: number) => void;

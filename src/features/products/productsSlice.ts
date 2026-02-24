@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getAllProducts, getProductById } from '../../services/api';
-import { Product } from '../../types';
+import { Product, ProductsState } from '../../types';
 import type { RootState } from '../../app/store';
 
 export const fetchProducts = createAsyncThunk<Product[], void, { state: RootState; rejectValue: string }>(
@@ -45,13 +45,6 @@ export const fetchProductById = createAsyncThunk<Product, string | number, { sta
         }
     }
 );
-
-export interface ProductsState {
-    products: Product[];
-    selectedProduct: Product | null;
-    loading: boolean;
-    error: string | null;
-}
 
 const initialState: ProductsState = {
     products: [],
@@ -99,4 +92,3 @@ const productsSlice = createSlice({
 
 export const { clearSelectedProduct } = productsSlice.actions;
 export default productsSlice.reducer;
-

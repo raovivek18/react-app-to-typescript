@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction, Middleware } from '@reduxjs/toolkit';
 import { Product, CartItem, CartState, CartItemId } from '../../types';
+import { loadFromStorage } from '../../utils/storage';
+import { isCartState } from '../../utils/typeGuards';
 
 // Helper to compute totals safely
 const calculateTotals = (items: CartItem[]): Pick<CartState, 'totalQuantity' | 'subtotal' | 'tax' | 'shipping' | 'totalPrice'> => {
@@ -23,18 +25,10 @@ const calculateTotals = (items: CartItem[]): Pick<CartState, 'totalQuantity' | '
     };
 };
 
+
 // Helper to load cart from LocalStorage
 const loadCartFromStorage = (): CartState | undefined => {
-    try {
-        const serializedState = localStorage.getItem('cart');
-        if (serializedState === null) {
-            return undefined;
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        console.warn("Failed to load cart from LocalStorage:", err);
-        return undefined;
-    }
+    return loadFromStorage<CartState>('cart', isCartState);
 };
 
 const initialState: CartState = loadCartFromStorage() || {

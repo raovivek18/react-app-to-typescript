@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { loadFromStorage } from '../utils/storage';
+import { isTheme } from '../utils/typeGuards';
 
 type Theme = 'light' | 'dark';
 
@@ -11,8 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState<Theme>(() => {
-        const saved = localStorage.getItem('theme') as Theme;
-        return saved === 'light' || saved === 'dark' ? saved : 'light';
+        return loadFromStorage<Theme>('theme', isTheme) || 'light';
     });
 
     useEffect(() => {

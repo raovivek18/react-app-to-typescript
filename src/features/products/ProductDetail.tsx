@@ -6,21 +6,19 @@ import { addToCart } from '../cart/cartSlice';
 import { ShoppingCart, ShieldCheck, Truck, RefreshCw, Star, ChevronRight, AlertCircle } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useToast } from '../../context/ToastContext';
-import { Product, ProductParams } from '../../types';
+import { Product } from '../../types';
 import './ProductDetail.css';
 
+import { isValidProductParams } from '../../utils/typeGuards';
+
 const ProductDetail = () => {
-    const { id } = useParams<ProductParams>();
+    const params = useParams();
+    const isValidId = isValidProductParams(params);
+    const { id } = params;
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
     const { selectedProduct, products, loading, error } = useAppSelector((state) => state.products);
     const [activeImage, setActiveImage] = useState(0);
-
-    const isValidId = useMemo(() => {
-        if (!id) return false;
-        const num = parseInt(id);
-        return !isNaN(num) && num > 0;
-    }, [id]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -43,7 +41,7 @@ const ProductDetail = () => {
         addToast(`Added ${product.title} to your cart`, 'success');
     };
 
-    if (!isValidId && id) {
+    if (!isValidId) {
         return (
             <div className="container">
                 <div className="error-message glass animate-fade-in" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
@@ -87,7 +85,18 @@ const ProductDetail = () => {
         );
     }
 
-    if (!selectedProduct) return null;
+    if (!selectedProduct) {
+        return (
+            <div className="container">
+                <div className="error-message glass animate-fade-in" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                    <AlertCircle size={64} style={{ color: 'var(--accent-red)', marginBottom: '1.5rem' }} />
+                    <h3 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Product Not Found</h3>
+                    <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>We couldn't find the product details you were looking for.</p>
+                    <Link to="/" className="premium-btn">Return to Shop</Link>
+                </div>
+            </div>
+        );
+    }
 
     // Derived state - safe since selectedProduct is guaranteed here
     const images: string[] = useMemo(() =>
