@@ -2,51 +2,23 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--sp-6);
-    padding: var(--sp-8) 0;
 }
 
 @media (max-width: 1024px) {
     .products-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--sp-4);
+    }
+}
+
+@media (max-width: 480px) {
     .products-grid {
         grid-template-columns: 1fr;
     }
-}
-
-.loader-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
-    gap: 1.5rem;
-    color: var(--text-muted);
-}
-
-.loader {
-    width: 48px;
-    height: 48px;
-    border: 4px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.error-message {
-    padding: 2rem;
-    background: #fef2f2;
-    color: #991b1b;
-    border-radius: var(--radius);
-    text-align: center;
-    margin: 2rem 0;
 }

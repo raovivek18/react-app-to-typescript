@@ -2,7 +2,7 @@ import ProductDetail from '../features/products/ProductDetail';
 
 const ProductPage = () => {
     return (
-        <div className="product-page container">
+        <div className="product-page">
             <ProductDetail />
         </div>
     );

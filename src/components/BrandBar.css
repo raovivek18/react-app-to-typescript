@@ -1,0 +1,55 @@
+.brand-bar {
+    background-color: #000000;
+    padding: 44px 0;
+}
+
+.brand-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-8);
+}
+
+.brand-item {
+    color: #ffffff;
+    font-size: 2.2rem;
+    font-weight: 900;
+}
+
+.brand-item.zara {
+    letter-spacing: -6px;
+    font-weight: 800;
+}
+
+.brand-item.versace {
+    font-family: serif;
+    letter-spacing: 2px;
+}
+
+.brand-item.prada {
+    font-family: serif;
+    letter-spacing: -1px;
+}
+
+.brand-item.ck {
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+@media (max-width: 1024px) {
+    .brand-item {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-list {
+        justify-content: center;
+        gap: var(--sp-6);
+    }
+
+    .brand-item {
+        font-size: 1.25rem;
+    }
+}

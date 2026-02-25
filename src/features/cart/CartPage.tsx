@@ -1,156 +1,100 @@
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { clearCart, removeFromCart } from './cartSlice';
+import { removeFromCart } from './cartSlice';
 import { Link } from 'react-router-dom';
 import CartItem from '../../components/CartItem';
-import { ShoppingBag, ArrowRight, Trash2, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { ArrowRight, ChevronRight, Tag } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
-
-import { CartItem as ICartItem } from '../../types';
-import Button from '../../components/ui/Button';
-import Modal from '../../components/ui/Modal';
 import './CartPage.css';
 
 const CartPage = () => {
-    const { cartItems, totalPrice, subtotal, shipping, tax, totalQuantity } = useAppSelector((state) => state.cart);
+    const { cartItems, subtotal } = useAppSelector((state) => state.cart);
     const dispatch = useAppDispatch();
     const { addToast } = useToast();
 
-    const [itemToDelete, setItemToDelete] = useState<ICartItem | null>(null);
-
-    const handleRemoveRequest = (item: ICartItem) => {
-        setItemToDelete(item);
-    };
-
-    const confirmRemove = () => {
-        if (itemToDelete) {
-            dispatch(removeFromCart(itemToDelete.id));
-            addToast(`${itemToDelete.title} removed from bag`, 'info');
-            setItemToDelete(null);
-        }
-    };
-
-    const handleClearCart = () => {
-        if (window.confirm('Are you sure you want to clear your entire bag?')) {
-            dispatch(clearCart());
-            addToast('Shopping bag cleared', 'info');
-        }
+    const handleRemove = (id: number) => {
+        dispatch(removeFromCart(id));
+        addToast('Item removed from cart', 'info');
     };
 
     if (cartItems.length === 0) {
         return (
-            <div className="empty-cart-container container animate-fade-in">
-                <div className="empty-shadow"></div>
-                <div className="empty-cart-content">
-                    <div className="icon-blob">
-                        <ShoppingBag size={64} className="empty-icon" />
-                    </div>
-                    <h2>Your Shopping Bag spans the horizon...</h2>
-                    <p>It seems you haven't discovered your next favorite piece yet.</p>
-                    <Link to="/" className="premium-btn">
-                        <ArrowLeft size={18} /> Explore Collections
-                    </Link>
+            <div className="cart-page animate-fade-in container">
+                <nav className="breadcrumb">
+                    <Link to="/">Home</Link>
+                    <ChevronRight size={14} />
+                    <span className="current-crumb">Cart</span>
+                </nav>
+                <div className="empty-cart-message">
+                    <h1>Your cart is empty</h1>
+                    <Link to="/" className="add-to-cart-btn-full" style={{ display: 'inline-block', width: 'auto', padding: '0 40px', marginTop: '20px', lineHeight: '52px', textAlign: 'center', textDecoration: 'none', background: '#000', color: '#fff', borderRadius: '62px' }}>Go to Shop</Link>
                 </div>
             </div>
         );
     }
 
+    const discount = subtotal * 0.2;
+    const deliveryFee = 15;
+    const finalTotal = subtotal - discount + deliveryFee;
+
     return (
         <div className="cart-page animate-fade-in container">
-            <div className="cart-header">
-                <div>
-                    <h1>Shopping Bag</h1>
-                    <p className="cart-subtitle">Review your selected creations ({totalQuantity} items)</p>
-                </div>
-                <button onClick={handleClearCart} className="clear-cart-btn">
-                    <Trash2 size={16} /> Clear All
-                </button>
-            </div>
+            <nav className="breadcrumb">
+                <Link to="/">Home</Link>
+                <ChevronRight size={14} />
+                <span className="current-crumb">Cart</span>
+            </nav>
 
-            <div className="cart-grid">
-                <div className="cart-items-list">
-                    {cartItems.map((item) => (
-                        <CartItem key={item.id} item={item} onRemove={handleRemoveRequest} />
+            <h1 className="page-title">Your cart</h1>
+
+            <div className="cart-layout">
+                <div className="cart-items-container">
+                    {cartItems.map((item, idx) => (
+                        <div key={item.id}>
+                            <CartItem item={item} onRemove={() => handleRemove(item.id)} />
+                            {idx < cartItems.length - 1 && <hr className="item-divider" />}
+                        </div>
                     ))}
-
-                    <div className="continue-shopping-row">
-                        <Link to="/" className="text-link">
-                            <ArrowLeft size={16} /> Continue Shopping
-                        </Link>
-                    </div>
                 </div>
 
-                <div className="cart-summary-panel">
-                    <div className="summary-card glass">
-                        <h3>Order Summary</h3>
-                        <div className="summary-body">
-                            <div className="summary-row">
-                                <span>Subtotal</span>
-                                <span>${subtotal.toFixed(2)}</span>
+                <div className="cart-summary-container">
+                    <div className="order-summary-card">
+                        <h2>Order Summary</h2>
+                        <div className="summary-details">
+                            <div className="summary-line">
+                                <span className="label">Subtotal</span>
+                                <span className="value">${subtotal.toFixed(0)}</span>
                             </div>
-                            <div className="summary-row">
-                                <span>Shipping</span>
-                                <span className={shipping === 0 ? 'free-tag' : ''}>
-                                    {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
-                                </span>
+                            <div className="summary-line">
+                                <span className="label">Discount (-20%)</span>
+                                <span className="value discount">-${discount.toFixed(0)}</span>
                             </div>
-                            <div className="summary-row">
-                                <span>Tax</span>
-                                <span>${tax.toFixed(2)}</span>
+                            <div className="summary-line">
+                                <span className="label">Delivery Fee</span>
+                                <span className="value">${deliveryFee}</span>
                             </div>
-                            <div className="summary-divider"></div>
-                            <div className="summary-row total-row">
-                                <span>Total Amount</span>
-                                <span>${totalPrice.toFixed(2)}</span>
+                            <hr className="summary-divider" />
+                            <div className="summary-line total">
+                                <span className="label">Total</span>
+                                <span className="value">${finalTotal.toFixed(0)}</span>
                             </div>
                         </div>
 
-                        <Link to="/checkout" className="premium-btn checkout-btn">
-                            Begin Checkout <ArrowRight size={20} />
+                        <div className="promo-section">
+                            <div className="promo-input-wrapper">
+                                <Tag size={20} className="tag-icon" />
+                                <input type="text" placeholder="Add promo code" />
+                            </div>
+                            <button className="apply-btn">Apply</button>
+                        </div>
+
+                        <Link to="/checkout" className="checkout-btn-full">
+                            Go to Checkout <ArrowRight size={20} />
                         </Link>
-
-                        <div className="payment-trust">
-                            <p>Guaranteed secure checkout with SSL encryption</p>
-                        </div>
                     </div>
                 </div>
             </div>
-
-            {/* Confirmation Modal */}
-            <Modal
-                isOpen={!!itemToDelete}
-                onClose={() => setItemToDelete(null)}
-                title="Remove Item?"
-                size="small"
-                footer={
-                    <div className="modal-actions">
-                        <Button
-                            variant="primary"
-                            className="outline small"
-                            onClick={() => setItemToDelete(null)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="danger"
-                            className="small"
-                            onClick={confirmRemove}
-                        >
-                            Remove
-                        </Button>
-                    </div>
-                }
-            >
-                {itemToDelete && (
-                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-                        <AlertTriangle size={24} className="warning-icon" />
-                        <p style={{ margin: 0 }}>Are you sure you want to remove <strong>{itemToDelete.title}</strong> from your shopping bag?</p>
-                    </div>
-                )}
-            </Modal>
         </div>
     );
 };
 
 export default CartPage;
-

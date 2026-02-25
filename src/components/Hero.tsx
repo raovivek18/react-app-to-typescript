@@ -1,63 +1,49 @@
-import { ArrowRight, ShoppingBag } from 'lucide-react';
 import './Hero.css';
 
 const Hero = () => {
     return (
         <section className="hero">
-            <div className="hero-background">
-                <div className="gradient-sphere sphere-1"></div>
-                <div className="gradient-sphere sphere-2"></div>
-            </div>
-
             <div className="container hero-container">
                 <div className="hero-content animate-fade-in">
-                    <div className="hero-badge">New Collection 2026</div>
                     <h1 className="hero-title">
-                        Define Your <span className="highlight">Signature</span> Style
+                        FIND CLOTHES THAT MATCH YOUR STYLE PERFECTLY
                     </h1>
                     <p className="hero-subtitle">
-                        Experience the pinnacle of craftsmanship with our curated selection of ultra-premium essentials. Designed for those who demand excellence in every detail.
+                        Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.
                     </p>
                     <div className="hero-actions">
-                        <button className="premium-btn shop-btn">
-                            Explore Collection <ArrowRight size={20} />
-                        </button>
-                        <button className="secondary-btn">
-                            <ShoppingBag size={20} /> View Deals
+                        <button className="shop-now-btn">
+                            Shop Now
                         </button>
                     </div>
 
                     <div className="hero-stats">
                         <div className="stat-item">
-                            <span className="stat-value">50k+</span>
-                            <span className="stat-label">Happy Clients</span>
+                            <span className="stat-value">200+</span>
+                            <span className="stat-label">International Brands</span>
                         </div>
                         <div className="stat-divider"></div>
                         <div className="stat-item">
-                            <span className="stat-value">2k+</span>
-                            <span className="stat-label">Luxury Items</span>
+                            <span className="stat-value">2,000+</span>
+                            <span className="stat-label">High-Quality Products</span>
                         </div>
                         <div className="stat-divider"></div>
                         <div className="stat-item">
-                            <span className="stat-value">24/7</span>
-                            <span className="stat-label">Expert Support</span>
+                            <span className="stat-value">30,000+</span>
+                            <span className="stat-label">Happy Customers</span>
                         </div>
                     </div>
                 </div>
 
                 <div className="hero-image-container animate-fade-in">
-                    <div className="image-card">
+                    <div className="image-wrapper">
                         <img
-                            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2099&auto=format&fit=crop"
-                            alt="Premium Product"
-                            className="floating-img"
+                            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop"
+                            alt="Fashion Model"
+                            className="hero-img"
                         />
-                        <div className="glass-card info-floater">
-                            <div className="floater-content">
-                                <div className="floater-title">Premium Quality</div>
-                                <div className="floater-sub">Crafted with precision</div>
-                            </div>
-                        </div>
+                        <div className="star star-small">✦</div>
+                        <div className="star star-large">✦</div>
                     </div>
                 </div>
             </div>

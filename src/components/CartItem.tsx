@@ -1,13 +1,13 @@
 import { memo } from 'react';
 import { useAppDispatch } from '../app/hooks';
 import { increaseQuantity, decreaseQuantity } from '../features/cart/cartSlice';
-import { Trash2, Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Trash2 } from 'lucide-react';
 import { CartItem as ICartItem } from '../types';
 import './CartItem.css';
 
 interface CartItemProps {
     item: ICartItem;
-    onRemove: (item: ICartItem) => void;
+    onRemove: () => void;
 }
 
 const CartItem = memo(({ item, onRemove }: CartItemProps) => {
@@ -16,54 +16,45 @@ const CartItem = memo(({ item, onRemove }: CartItemProps) => {
     const imageUrl = item.images[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/150';
 
     return (
-        <div className="cart-item glass animate-fade-in">
+        <div className="cart-item animate-fade-in">
             <div className="item-image-wrapper">
                 <img src={imageUrl} alt={item.title} loading="lazy" />
             </div>
 
-            <div className="item-info">
-                <div className="item-meta">
-                    <span className="item-category">{item.category.name}</span>
+            <div className="item-content">
+                <div className="item-info-main">
                     <h3 className="item-title">{item.title}</h3>
+                    <p className="item-detail">Size: <span>Large</span></p>
+                    <p className="item-detail">Color: <span>White</span></p>
+                    <div className="item-price">${item.price}</div>
                 </div>
 
-                <div className="item-price-row">
-                    <span className="item-unit-price">${item.price}</span>
-                </div>
-            </div>
-
-            <div className="item-controls">
-                <div className="qty-selector">
+                <div className="item-actions-side">
                     <button
-                        onClick={() => dispatch(decreaseQuantity(item.id))}
-                        className="qty-action"
-                        disabled={item.quantity <= 1}
-                        aria-label="Decrease quantity"
+                        onClick={onRemove}
+                        className="item-delete-btn"
+                        aria-label="Remove item"
                     >
-                        <Minus size={14} />
+                        <Trash2 size={24} />
                     </button>
-                    <span className="qty-number">{item.quantity}</span>
-                    <button
-                        onClick={() => dispatch(increaseQuantity(item.id))}
-                        className="qty-action"
-                        aria-label="Increase quantity"
-                    >
-                        <Plus size={14} />
-                    </button>
+
+                    <div className="item-qty-selector">
+                        <button
+                            onClick={() => dispatch(decreaseQuantity(item.id))}
+                            className="qty-btn"
+                            disabled={item.quantity <= 1}
+                        >
+                            <Minus size={18} />
+                        </button>
+                        <span className="qty-val">{item.quantity}</span>
+                        <button
+                            onClick={() => dispatch(increaseQuantity(item.id))}
+                            className="qty-btn"
+                        >
+                            <Plus size={18} />
+                        </button>
+                    </div>
                 </div>
-
-                <button
-                    onClick={() => onRemove(item)}
-                    className="item-remove-btn"
-                    title="Remove from bag"
-                    aria-label="Remove item"
-                >
-                    <Trash2 size={18} />
-                </button>
-            </div>
-
-            <div className="item-total-price">
-                ${(item.price * item.quantity).toFixed(2)}
             </div>
         </div>
     );

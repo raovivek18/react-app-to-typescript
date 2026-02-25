@@ -1,10 +1,7 @@
-import { memo, MouseEvent } from 'react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppDispatch } from '../app/hooks';
-import { addToCart } from '../features/cart/cartSlice';
-import { ShoppingCart, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useToast } from '../context/ToastContext';
+import { Star } from 'lucide-react';
 import { Product } from '../types';
 import './ProductCard.css';
 
@@ -14,58 +11,36 @@ interface ProductCardProps {
 }
 
 const ProductCard = memo(({ product, index = 0 }: ProductCardProps) => {
-    const dispatch = useAppDispatch();
-    const { addToast } = useToast();
-
-    const handleAddToCart = (e: MouseEvent) => {
-        e.preventDefault();
-        dispatch(addToCart(product));
-        addToast(`${product.title} added to cart`, 'success');
-    };
-
     const imageUrl = product.images[0]?.replace(/[\[\]"]/g, '') || 'https://via.placeholder.com/300';
 
     return (
         <motion.div
-            className="product-card premium-card"
-            initial={{ opacity: 0, y: 30 }}
+            className="product-card"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
                 duration: 0.4,
                 delay: index * 0.05,
-                ease: [0.16, 1, 0.3, 1]
             }}
-            whileHover={{ y: -8 }}
         >
-            <div className="card-image-wrapper">
-                <img src={imageUrl} alt={product.title} loading="lazy" />
-                <div className="card-actions">
-                    <Link to={`/product/${product.id}`} className="action-btn" title="View Details">
-                        <Eye size={18} />
-                    </Link>
-                    <motion.button
-                        className="action-btn primary"
-                        onClick={handleAddToCart}
-                        title="Add to Bag"
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        <ShoppingCart size={18} />
-                    </motion.button>
+            <Link to={`/product/${product.id}`} className="card-link">
+                <div className="card-image-wrapper">
+                    <img src={imageUrl} alt={product.title} loading="lazy" />
                 </div>
-                <span className="card-badge-top glass">{product.category.name}</span>
-            </div>
 
-            <div className="card-content">
-                <Link to={`/product/${product.id}`} className="card-title">
-                    {product.title}
-                </Link>
-                <div className="card-footer">
-                    <div className="price-group">
-                        <span className="price-label">Price</span>
-                        <span className="card-price">${product.price}</span>
+                <div className="card-content">
+                    <h3 className="card-title">{product.title}</h3>
+                    <div className="card-rating">
+                        <div className="stars">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} size={16} fill={i < 4 ? "#FFC633" : "none"} color={i < 4 ? "#FFC633" : "#FFC633"} />
+                            ))}
+                        </div>
+                        <span className="rating-value">4.5/5</span>
                     </div>
+                    <div className="card-price">${product.price}</div>
                 </div>
-            </div>
+            </Link>
         </motion.div>
     );
 });

@@ -1,0 +1,41 @@
+.announcement-bar {
+    background-color: var(--primary);
+    color: #ffffff;
+    padding: 9px 0;
+    text-align: center;
+    font-size: 0.875rem;
+    position: relative;
+}
+
+.announcement-bar p {
+    margin: 0;
+    font-weight: 400;
+}
+
+.announcement-bar a {
+    color: #ffffff;
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.close-announcement {
+    position: absolute;
+    right: var(--sp-6);
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .close-announcement {
+        display: none;
+    }
+}
