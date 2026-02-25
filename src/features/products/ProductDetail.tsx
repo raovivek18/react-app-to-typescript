@@ -3,13 +3,15 @@ import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchProductById, fetchProducts, clearSelectedProduct } from './productsSlice';
 import { addToCart } from '../cart/cartSlice';
-import { Star, ChevronRight, AlertCircle, Plus, Minus, Check } from 'lucide-react';
+import { ChevronRight, AlertCircle, Plus, Minus, Check } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useToast } from '../../context/ToastContext';
 import { Product } from '../../types';
 import './ProductDetail.css';
 
 import { isValidProductParams } from '../../utils/typeGuards';
+
+import { motion } from 'framer-motion';
 
 const ProductDetail = () => {
     const params = useParams();
@@ -44,7 +46,7 @@ const ProductDetail = () => {
     }, [dispatch, id, isValidId, products.length]);
 
     const handleAddToCart = (product: Product) => {
-        dispatch(addToCart({ ...product })); // Keeping simpler for now if types conflict, or just passing product
+        dispatch(addToCart({ ...product }));
         addToast(`Added ${quantity} ${product.title} to your cart`, 'success');
     };
 
@@ -97,20 +99,25 @@ const ProductDetail = () => {
         .slice(0, 4) : [];
 
     return (
-        <div className="product-detail-page animate-fade-in">
+        <div className="product-detail-page">
             <div className="container">
                 <nav className="breadcrumb">
                     <Link to="/">Home</Link>
                     <ChevronRight size={14} />
                     <Link to="/">Shop</Link>
                     <ChevronRight size={14} />
-                    <Link to="/">Men</Link>
+                    <Link to="/">{selectedProduct?.category?.name || 'Category'}</Link>
                     <ChevronRight size={14} />
-                    <span className="current-crumb">T-shirts</span>
+                    <span className="current-crumb">{selectedProduct?.title}</span>
                 </nav>
 
                 <div className="product-detail-grid">
-                    <div className="product-visuals">
+                    <motion.div
+                        className="product-visuals"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
                         <div className="thumbnails-vertical">
                             {images.map((img, idx) => (
                                 <button
@@ -123,33 +130,69 @@ const ProductDetail = () => {
                             ))}
                         </div>
                         <div className="main-image-panel">
-                            <img src={images[activeImage]} alt={selectedProduct?.title} />
+                            <motion.img
+                                key={activeImage}
+                                src={images[activeImage]}
+                                alt={selectedProduct?.title}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                            />
                         </div>
-                    </div>
+                    </motion.div>
 
                     <div className="product-info-panel">
-                        <h1 className="product-title">One Life Graphic T-shirt</h1>
+                        <motion.h1
+                            className="product-title"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                        >
+                            {selectedProduct?.title}
+                        </motion.h1>
 
-                        <div className="product-price">$260</div>
+                        <motion.div
+                            className="product-price"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                            ${selectedProduct?.price}
+                        </motion.div>
 
-                        <p className="product-description">
-                            This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.
-                        </p>
+                        <motion.p
+                            className="product-description"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                        >
+                            {selectedProduct?.description}
+                        </motion.p>
 
-                        <div className="product-features">
+                        <motion.div
+                            className="product-features"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.4 }}
+                        >
                             <p className="features-title">Key Features:</p>
                             <ul>
-                                <li><Check size={16} /> Premium 100% Cotton fabric for all-day comfort</li>
-                                <li><Check size={16} /> High-quality screen-printed graphic for long-lasting durability</li>
-                                <li><Check size={16} /> Classic crew neck and short sleeves for a timeless fit</li>
-                                <li><Check size={16} /> Available in Black, White, and Navy Blue</li>
-                                <li><Check size={16} /> Unisex design, suitable for both men and women</li>
+                                <li><Check size={16} /> Premium materials for all-day comfort</li>
+                                <li><Check size={16} /> High-quality craftsmanship for long-lasting durability</li>
+                                <li><Check size={16} /> Classic design for a timeless fit</li>
+                                <li><Check size={16} /> Available in multiple colors and sizes</li>
+                                <li><Check size={16} /> Ethical and sustainable production</li>
                             </ul>
-                        </div>
+                        </motion.div>
 
                         <hr className="divider" />
 
-                        <div className="selection-section">
+                        <motion.div
+                            className="selection-section"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.5 }}
+                        >
                             <p className="section-label">Select Colors</p>
                             <div className="colors-grid">
                                 {colors.map((color, idx) => (
@@ -163,11 +206,16 @@ const ProductDetail = () => {
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        </motion.div>
 
                         <hr className="divider" />
 
-                        <div className="selection-section">
+                        <motion.div
+                            className="selection-section"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: 0.6 }}
+                        >
                             <p className="section-label">Choose Size</p>
                             <div className="sizes-grid">
                                 {sizes.map((size) => (
@@ -180,35 +228,48 @@ const ProductDetail = () => {
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        </motion.div>
 
                         <hr className="divider" />
 
-                        <div className="purchase-actions">
+                        <motion.div
+                            className="purchase-actions"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.7 }}
+                        >
                             <div className="quantity-selector">
-                                <button onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={20} /></button>
+                                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} aria-label="Decrease quantity"><Minus size={20} /></button>
                                 <span>{quantity}</span>
-                                <button onClick={() => setQuantity(quantity + 1)}><Plus size={20} /></button>
+                                <button onClick={() => setQuantity(quantity + 1)} aria-label="Increase quantity"><Plus size={20} /></button>
                             </div>
-                            <button
+                            <motion.button
                                 className="add-to-cart-btn-full"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={() => selectedProduct && handleAddToCart(selectedProduct)}
                             >
                                 Add to Cart
-                            </button>
-                        </div>
+                            </motion.button>
+                        </motion.div>
                     </div>
                 </div>
 
                 {relatedProducts.length > 0 && (
-                    <div className="related-section">
+                    <motion.div
+                        className="related-section"
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
                         <h2 className="section-title-alt">YOU MIGHT ALSO LIKE</h2>
                         <div className="products-grid">
                             {relatedProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>
