@@ -4,6 +4,18 @@ import './Footer.css';
 const Footer = () => {
     return (
         <footer className="footer-container">
+            <div className="container newsletter-wrapper">
+                <div className="newsletter-card">
+                    <h2 className="newsletter-title">STAY UP TO DATE ABOUT OUR LATEST OFFERS</h2>
+                    <div className="newsletter-form">
+                        <div className="input-wrapper">
+                            <span className="email-icon">✉</span>
+                            <input type="email" placeholder="Enter your email address" />
+                        </div>
+                        <button className="subscribe-btn">Subscribe to Newsletter</button>
+                    </div>
+                </div>
+            </div>
             <div className="footer-main">
                 <div className="container footer-grid">
                     <div className="footer-brand">

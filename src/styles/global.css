@@ -5,8 +5,8 @@
   --primary-hover: #333333;
   --secondary: #666666;
   --background: #ffffff;
-  --surface: #F0EEED;
-  /* Product image background */
+  --surface: #F0F0F0;
+  /* Light gray for card backgrounds */
   --surface-alt: #F2F0F1;
   /* Hero background */
   --surface-categories: #F0F0F0;
@@ -262,11 +262,12 @@ a:focus-visible {
 .section-title-alt {
   font-family: var(--font-display);
   font-size: 3rem;
-  font-weight: 900;
+  font-weight: 1000;
   text-align: center;
   margin-bottom: var(--sp-12);
   color: #000000;
   text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 
 .section-subtitle {

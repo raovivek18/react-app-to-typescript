@@ -27,7 +27,7 @@ const Navbar = () => {
                 </Link>
 
                 <div className="navbar-links desktop-only">
-                    <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
+                    <Link to="/shop" className={`nav-link ${isActive('/shop') ? 'active' : ''}`}>
                         Shop <ChevronDown size={14} />
                     </Link>
                     <Link to="#" className="nav-link">On Sale</Link>
@@ -62,7 +62,7 @@ const Navbar = () => {
                     <button onClick={() => setIsMenuOpen(false)}><X size={24} /></button>
                 </div>
                 <div className="mobile-sidebar-content">
-                    <Link to="/" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Shop</Link>
+                    <Link to="/shop" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Shop</Link>
                     <Link to="#" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>On Sale</Link>
                     <Link to="#" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>New Arrivals</Link>
                     <Link to="#" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>Brands</Link>

@@ -17,10 +17,11 @@
 
 .hero-title {
     font-size: 4.5rem;
-    font-weight: 900;
+    font-weight: 1000;
     line-height: 1;
     margin-bottom: var(--sp-8);
     color: #000000;
+    letter-spacing: -0.04em;
 }
 
 .hero-subtitle {

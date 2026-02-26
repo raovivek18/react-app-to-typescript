@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchProducts } from '../features/products/productsSlice';
 import Hero from '../components/Hero';
@@ -36,7 +37,7 @@ const HomePage = () => {
                     <h2 className="section-title-alt">NEW ARRIVALS</h2>
                     <ProductsList products={newArrivals} loading={loading} error={error} />
                     <div className="view-all-wrapper">
-                        <button className="view-all-btn">View All</button>
+                        <Link to="/shop" className="view-all-btn">View All</Link>
                     </div>
                 </motion.section>
 
@@ -49,7 +50,7 @@ const HomePage = () => {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 className="section-title-alt">TOP SELLING</h2>
+                    <h2 className="section-title-alt">CASUAL</h2>
                     <ProductsList products={topSelling} loading={loading} error={error} />
                     <div className="view-all-wrapper">
                         <button className="view-all-btn">View All</button>

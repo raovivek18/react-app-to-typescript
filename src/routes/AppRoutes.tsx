@@ -2,6 +2,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Layout from '../components/Layout';
 import HomePage from '../pages/HomePage';
+import ShopPage from '../pages/ShopPage';
 import ProductPage from '../pages/ProductPage';
 import CartPage from '../pages/CartPage';
 import CheckoutPage from '../pages/CheckoutPage';
@@ -47,6 +48,19 @@ const AppRoutes = () => {
                                 exit="exit"
                             >
                                 <HomePage />
+                            </motion.div>
+                        }
+                    />
+                    <Route
+                        path="/shop"
+                        element={
+                            <motion.div
+                                variants={pageVariants}
+                                initial="initial"
+                                animate="animate"
+                                exit="exit"
+                            >
+                                <ShopPage />
                             </motion.div>
                         }
                     />

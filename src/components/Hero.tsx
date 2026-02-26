@@ -12,7 +12,7 @@ const Hero = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        FIND CLOTHES THAT MATCH YOUR STYLE
+                        FIND CLOTHES THAT MATCH YOUR STYLE PERFECTLY
                     </motion.h1>
                     <motion.p
                         className="hero-subtitle"

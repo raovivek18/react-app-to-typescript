@@ -1,10 +1,99 @@
 .footer-container {
     position: relative;
+    padding-top: 50px;
+}
+
+.newsletter-wrapper {
+    position: relative;
+    z-index: 2;
+    margin-bottom: -90px;
+}
+
+.newsletter-card {
+    background-color: #000000;
+    border-radius: 20px;
+    padding: 36px 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.newsletter-title {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 1000;
+    line-height: 1;
+    max-width: 550px;
+    margin: 0;
+    text-align: left;
+    letter-spacing: -0.02em;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 350px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.email-icon {
+    position: absolute;
+    left: 16px;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 16px 12px 48px;
+    border-radius: 62px;
+    border: none;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+.subscribe-btn {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 12px;
+    border-radius: 62px;
+    font-weight: 500;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
 }
 
 .footer-main {
     background-color: #f0f0f0;
-    padding: 80px 0 50px;
+    padding: 140px 0 50px;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px;
+}
+
+.social-links a {
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    transition: all 0.2s;
+}
+
+.social-links a:hover {
+    background-color: #000000;
+    color: #ffffff;
 }
 
 .footer-grid {
@@ -17,9 +106,10 @@
 .footer-logo {
     font-family: var(--font-display);
     font-size: 2rem;
-    font-weight: 800;
+    font-weight: 1000;
     color: #000000;
     margin-bottom: 25px;
+    letter-spacing: -0.04em;
 }
 
 .brand-desc {
